@@ -1,0 +1,139 @@
+---
+title: "Firebase BigQuery Export Schema"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: lumen
+    favicon: "./img/cropped-enor_favicon-1-180x180.png"
+    logo: "./img/e-nor-logo-54h.png"
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(xml2)
+library(rvest)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(data.tree)
+library(collapsibleTree)
+library(DT)
+
+url <- "https://support.google.com/firebase/answer/7029846?hl=en"
+
+fbe_webpage <- read_html(url)
+
+## get data from first table 
+fbe_table <- fbe_webpage %>% 
+  html_nodes("table") %>% 
+  .[1] %>% 
+  html_table(header = TRUE) %>% 
+  as.data.frame()
+
+## rename columns to match input required for collapsible tree
+names(fbe_table) <- c("node", "type", "description")
+
+## build dataset for collapsible tree
+tree <- fbe_table %>%
+  mutate(level1 = node) %>%
+  separate(col = level1,
+           into = c("level1", "level2", "level3", "level4"),
+           sep = "\\.") %>%
+  select(contains("level"), node, everything()) %>%
+  mutate(node = str_replace_all(node, "\\.", " / "),
+         pathString = ifelse(str_detect(node, "bq\\-export"), node, str_c("app_events_ / ", node)),
+         description = str_c("<p>", description, "<br/><b>", type,"</b></p>")) %>%
+  select(-node) %>%
+  filter(type != "RECORD")
+
+## create node object and description
+tree_nodes <- as.Node(tree)
+tree_nodes$description <- "Within each dataset, a table is imported for each day of export. These tables have the format (app_events_YYYYMMDD). Additionally, a table is imported for events received throughout the current day.  This table is named (app_events_intraday_YYYYMMDD) and it is populated in real-time as events are collected."
+```
+
+Overview {.sidebar}
+=====================================
+
+A visualization of the [Firebase BigQuery Export schema](`r url`). Mouseover the leaf nodes to see the field description and field type.
+
+Click the navigation bar to see the schema as a [collapse tree](#section-collapsible-tree), a searchable [table](#section-table) or 
+to [learn more](#section-learn-more).
+
+#### Helpful Links
+
+- [Blog post](https://www.e-nor.com/blog/bigquery/using-r-visualize-google-bigquery-export-schemas)
+- [Firebase BigQuery Export](https://support.google.com/firebase/topic/7029512?hl=en)
+- [Firebase BigQuery Export schema](`r url`) 
+
+![](./img/logo-firebase.png)
+
+Collapsible Tree {data-orientation=rows}
+=====================================
+
+Row {data-height=800}
+-------------------------------------
+
+### Collapsible Tree {.no-title}
+
+```{r collapsibleTree, message = FALSE, warning=FALSE, echo = FALSE}
+collapsibleTree(df = tree_nodes, 
+                tooltip = TRUE,
+                tooltipHtml = "description",
+                zoomable = FALSE)
+```
+
+Row {data-height=100}
+-------------------------------------
+
+**Source:** [Original visualization](https://rpubs.com/Phippsy/bq-export) by [Donal Phipps](https://github.com/Phippsy)
+
+Table 
+=====================================
+
+### Table {.no-title}
+
+```{r table, message = FALSE, warning=FALSE, echo = FALSE}
+datatable(data = fbe_table,
+          colnames = c("name",
+                       "type",
+                       "description"),
+          rownames = FALSE,
+          filter = "top",
+          extensions = "Buttons",
+          options = list(dom = "Bltip",
+                         buttons = list(list(extend = "collection",
+                                             buttons = c("csv", "excel", "pdf"),
+                                             text = "Download")),
+                         pageLength = 25,
+                         lengthMenu = list(c(10, 25, 50, 100, 500, -1),
+                                           c("10","25", "50", "100", "500", "All"))))
+```
+
+Learn More
+=====================================
+
+#### About This Visualization
+
+This report was built by [Justin Marciszewski](https://github.com/justinjm) using the following:
+
+- [RStudio](https://www.rstudio.com/)
+- [Rmarkdown](http://rmarkdown.rstudio.com/)
+- [tidyverse](https://www.tidyverse.org/) (dplyr and tidyr)
+- [rvest](https://github.com/hadley/rvest)
+- [xml2](https://github.com/r-lib/xml2)
+- [stringr](https://github.com/tidyverse/stringr)
+- [flexdashboard](http://rmarkdown.rstudio.com/flexdashboard/) 
+- [collapsibleTree](https://github.com/AdeelK93/collapsibleTree)
+- [googleAuthR](https://github.com/MarkEdmondson1234/googleAuthR)
+- [googleCloudStorageR](http://code.markedmondson.me/googleCloudStorageR/)
+
+Please [send me an email](mailto:justin@e-nor.com) if you'd like to learn more!
+
+#### Helpful Links
+
+- [Blog post](https://www.e-nor.com/blog/bigquery/using-r-visualize-google-bigquery-export-schemas)
+- [Firebase BigQuery Export](https://support.google.com/firebase/topic/7029512?hl=en)
+- [Firebase BigQuery Export schema](`r url`)
+
+#### Source 
+
+Special thanks to [Donal Phipps](https://github.com/Phippsy) for sharing the source code for the webscraping and [collapsible tree visualization](https://rpubs.com/Phippsy/bq-export)!
