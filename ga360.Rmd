@@ -5,6 +5,7 @@ output:
     theme: lumen
     favicon: "./img/cropped-enor_favicon-1-180x180.png"
     logo: "./img/e-nor-logo-54h.png"
+    source_code: https://github.com/e-nor/gmp-bigquery-schema-visualizations/blob/master/ga360.Rmd
 runtime: shiny
 ---
 
@@ -18,10 +19,12 @@ library(data.tree)
 library(collapsibleTree)
 library(DT)
 
-bqe_html <- read_html("https://support.google.com/analytics/answer/3437719?hl=en")
+url <- "https://support.google.com/analytics/answer/3437719?hl=en"
+
+bqe_webpage <- read_html(url)
 
 ## get data from h2 elements
-bqe_table <- bqe_html %>%
+bqe_table <- bqe_webpage %>%
   html_nodes("table") %>%
   html_table(header = TRUE) %>% 
   as.data.frame()
@@ -60,7 +63,7 @@ to [learn more](#section-learn-more).
 
 - [Blog post](https://www.e-nor.com/blog/bigquery/using-r-visualize-google-bigquery-export-schemas)
 - [BigQuery Export](https://support.google.com/analytics/topic/3416089?hl=en&ref_topic=2430414)
-- [BigQuery Export schema](https://support.google.com/analytics/answer/3437719?hl=en) 
+- [BigQuery Export schema](`r url`)
 
 ![](./img/logo-ga360.jpg)
 
@@ -82,6 +85,7 @@ collapsibleTree(df = bqe_tree_nodes,
 Row {data-height=100}
 -------------------------------------
 
+**Schema Updated:** `r format(Sys.time(), '%b %d, %Y')`  
 **Source:** [Original visualization](https://rpubs.com/Phippsy/bq-export) by [Donal Phipps](https://github.com/Phippsy)
 
 Table 
@@ -130,7 +134,7 @@ Please [send me an email](mailto:justin@e-nor.com) if you'd like to learn more!
 
 - [Blog post](https://www.e-nor.com/blog/bigquery/using-r-visualize-google-bigquery-export-schemas)
 - [BigQuery Export](https://support.google.com/analytics/topic/3416089?hl=en&ref_topic=2430414)
-- [BigQuery Export schema](https://support.google.com/analytics/answer/3437719?hl=en) 
+- [BigQuery Export schema](`r url`)
 
 #### Source 
 
