@@ -3,7 +3,7 @@ This repository contains source code from the blog post [Using R to Visualize Go
 
 Here are direct links to the visualizations: 
 
-* [Google Analytics 360 BigQuery Export Schema](https://storage.googleapis.com/bigquery-schema-visualizations/ga360.html)
-* [Firebase BigQuery Export Schema](https://storage.googleapis.com/bigquery-schema-visualizations/firebase.html)
+* [Google Analytics 360 BigQuery Export Schema](https://storage.googleapis.com/e-nor/visualizations/bigquery/ga360-schema.html)
+* [Firebase BigQuery Export Schema](https://storage.googleapis.com/e-nor/visualizations/bigquery/firebase-schema.html)
 
 Special thanks to [Donal Phipps](https://github.com/Phippsy) for sharing the source code for the webscraping and [collapsible tree visualization](https://rpubs.com/Phippsy/bq-export)!
