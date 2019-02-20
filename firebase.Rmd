@@ -5,6 +5,7 @@ output:
     theme: lumen
     favicon: "./img/cropped-enor_favicon-1-180x180.png"
     logo: "./img/e-nor-logo-54h.png"
+    source_code: https://github.com/e-nor/gmp-bigquery-schema-visualizations/blob/master/firebase.Rmd
 runtime: shiny
 ---
 
@@ -27,7 +28,14 @@ fbe_table <- fbe_webpage %>%
   html_nodes("table") %>% 
   .[1] %>% 
   html_table(header = TRUE) %>% 
-  as.data.frame()
+  as.data.frame() %>% 
+  # filter out rows of field names that aren't in BQ
+  # since it doesn't belong in our collapsible tree 
+  filter(!Field.name %in% c("App",
+                            "Device", 
+                            "User", 
+                            "Stream and platform", 
+                            "Geo"))
 
 ## rename columns to match input required for collapsible tree
 names(fbe_table) <- c("node", "type", "description")
@@ -84,7 +92,8 @@ collapsibleTree(df = tree_nodes,
 Row {data-height=100}
 -------------------------------------
 
-**Source:** [Original visualization](https://rpubs.com/Phippsy/bq-export) by [Donal Phipps](https://github.com/Phippsy)
+**Schema Updated:** `r format(Sys.time(), '%b %d, %Y')`  
+**Source:** [Original visualization](https://rpubs.com/Phippsy/bq-export) by [Donal Phipps](https://github.com/Phippsy)  
 
 Table 
 =====================================
