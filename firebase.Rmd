@@ -48,14 +48,14 @@ tree <- fbe_table %>%
            sep = "\\.") %>%
   select(contains("level"), node, everything()) %>%
   mutate(node = str_replace_all(node, "\\.", " / "),
-         pathString = ifelse(str_detect(node, "bq\\-export"), node, str_c("app_events_ / ", node)),
+         pathString = ifelse(str_detect(node, "bq\\-export"), node, str_c("events_ / ", node)),
          description = str_c("<p>", description, "<br/><b>", type,"</b></p>")) %>%
   select(-node) %>%
   filter(type != "RECORD")
 
 ## create node object and description
 tree_nodes <- as.Node(tree)
-tree_nodes$description <- "Within each dataset, a table is imported for each day of export. These tables have the format (app_events_YYYYMMDD). Additionally, a table is imported for events received throughout the current day.  This table is named (app_events_intraday_YYYYMMDD) and it is populated in real-time as events are collected."
+tree_nodes$description <- "Within each dataset, a table is imported for each day of export. These tables have the format (events_YYYYMMDD). Additionally, a table is imported for events received throughout the current day.  This table is named (events_intraday_YYYYMMDD) and it is populated in real-time as events are collected."
 ```
 
 Overview {.sidebar}
