@@ -19,6 +19,7 @@ upload_to_gcs <- function(output,
                           outfile){
   gcs_upload(file = paste0(output, ".html"),
              name = paste0(outfile, ".html"),
-             predefinedAcl = c("publicRead"))
+             predefinedAcl = c("publicRead"),
+             type =  "text/html")
   
 }   

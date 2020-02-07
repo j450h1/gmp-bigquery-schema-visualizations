@@ -30,8 +30,8 @@ source("./scripts/functions.R")
 gcs_get_global_bucket()
 
 ## uplaod to gcs and set permissions so anyone can view it 
-upload_to_gcs(output = "ga360", 
+upload_to_gcs(output = "ga360",
               outfile = "visualizations/bigquery/ga360-schema")
-upload_to_gcs(output = "firebase", 
+upload_to_gcs(output = "firebase",
               outfile = "visualizations/bigquery/firebase-schema")
 
