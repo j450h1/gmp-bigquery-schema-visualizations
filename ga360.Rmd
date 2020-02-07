@@ -85,7 +85,7 @@ collapsibleTree(df = bqe_tree_nodes,
 Row {data-height=100}
 -------------------------------------
 
-**Schema Updated:** `r format(Sys.time(), '%b %d, %Y')`  
+**Report Updated:** `r format(Sys.time(), '%b %d, %Y')`  
 **Source:** [Original visualization](https://rpubs.com/Phippsy/bq-export) by [Donal Phipps](https://github.com/Phippsy)
 
 Table 
